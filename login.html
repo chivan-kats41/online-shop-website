@@ -18,12 +18,6 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
         <link href="lib/slick/slick.css" rel="stylesheet">
         <link href="lib/slick/slick-theme.css" rel="stylesheet">
-		<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-		<!-- 2. Your client file second -->
-		<script src="js/supabase.js"></script>
-		
-		<!-- 3. Then your page script -->
-		<script src="js/login.js"></script>
 
         <!-- Template Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
@@ -134,24 +128,74 @@
         </div>
         <!-- Breadcrumb End -->
         
-       <form>
-  <input type="email" id="email" class="form-control" placeholder="Email">
-  <input type="password" id="password" class="form-control mt-2" placeholder="Password">
-  <button type="button" class="btn btn-primary mt-3" onclick="login(
-    document.getElementById('email').value,
-    document.getElementById('password').value
-  )">Login</button>
-
-  <button type="button" class="btn btn-secondary mt-2" onclick="signUp(
-    document.getElementById('email').value,
-    document.getElementById('password').value
-  )">Sign Up</button>
-</form>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase.js"></script>
-<script src="js/auth.js"></script>        
-		<!-- Login End -->
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">    
+                        <div class="register-form">
+                            <h4 class="mb-3">Create Account</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>First Name *</label>
+                                    <input class="form-control" type="text" id="reg-firstname" placeholder="First Name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Last Name</label>
+                                    <input class="form-control" type="text" id="reg-lastname" placeholder="Last Name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>E-mail *</label>
+                                    <input class="form-control" type="email" id="reg-email" placeholder="E-mail">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Mobile No</label>
+                                    <input class="form-control" type="text" id="reg-mobile" placeholder="Mobile No">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Password *</label>
+                                    <input class="form-control" type="password" id="reg-password" placeholder="Password">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Retype Password *</label>
+                                    <input class="form-control" type="password" id="reg-password2" placeholder="Retype Password">
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <button class="btn" onclick="handleRegister()">Create Account</button>
+                                </div>
+                                <div class="col-md-12" id="register-msg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="login-form">
+                            <h4 class="mb-3">Login to Your Account</h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>E-mail</label>
+                                    <input class="form-control" type="email" id="login-email" placeholder="E-mail">
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Password</label>
+                                    <input class="form-control" type="password" id="login-password" placeholder="Password">
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="newaccount">
+                                        <label class="custom-control-label" for="newaccount">Keep me signed in</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <button class="btn" onclick="handleLogin()">Login</button>
+                                </div>
+                                <div class="col-md-12" id="login-msg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
         
         <!-- Footer Start -->
         <div class="footer">
@@ -246,13 +290,64 @@
         <!-- Back to Top -->
         <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
         
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/slick/slick.min.js"></script>
+        <!-- Supabase CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         
-        <!-- Template Javascript -->
-        <script src="js/main.js"></script>
+        <!-- Supabase Client -->
+        <script src="js/supabase.js"></script>
+        
+        <!-- Login Page Logic -->
+        <script>
+            // Handle Register form submit
+            function handleRegister() {
+                const firstName = document.getElementById('reg-firstname').value.trim()
+                const lastName  = document.getElementById('reg-lastname').value.trim()
+                const email     = document.getElementById('reg-email').value.trim()
+                const password  = document.getElementById('reg-password').value
+                const password2 = document.getElementById('reg-password2').value
+
+                if (!firstName || !email || !password) {
+                    showMessage('register-msg', 'Please fill in all required fields.', 'warning')
+                    return
+                }
+                if (password !== password2) {
+                    showMessage('register-msg', 'Passwords do not match.', 'danger')
+                    return
+                }
+                if (password.length < 6) {
+                    showMessage('register-msg', 'Password must be at least 6 characters.', 'danger')
+                    return
+                }
+                signUp(firstName, lastName, email, password)
+            }
+
+            // Handle Login form submit
+            function handleLogin() {
+                const email    = document.getElementById('login-email').value.trim()
+                const password = document.getElementById('login-password').value
+
+                if (!email || !password) {
+                    showMessage('login-msg', 'Please enter your email and password.', 'warning')
+                    return
+                }
+                login(email, password)
+            }
+
+            // Show loading button state
+            function setLoading(btnId, loading) {
+                const btn = document.getElementById(btnId)
+                if (btn) btn.disabled = loading
+                if (btn) btn.textContent = loading ? 'Please wait...' : 'Submit'
+            }
+
+            // On page load — check if already logged in
+            document.addEventListener('DOMContentLoaded', async () => {
+                const user = await getUser()
+                if (user) {
+                    // Already logged in, redirect
+                    window.location.href = 'my-account.html'
+                }
+            })
+        </script>
     </body>
 </html>
