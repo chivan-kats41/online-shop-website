@@ -18,12 +18,6 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
         <link href="lib/slick/slick.css" rel="stylesheet">
         <link href="lib/slick/slick-theme.css" rel="stylesheet">
-		<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-		<!-- 2. Your client file second -->
-		<script src="js/supabase.js"></script>
-		
-		<!-- 3. Then your page script -->
-		<script src="js/login.js"></script>
 
         <!-- Template Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
@@ -135,60 +129,64 @@
         <!-- Breadcrumb End -->
         
         <!-- Checkout Start -->
+        <!-- Checkout Start -->
         <div class="checkout">
-            <div class="container-fluid"> 
+            <div class="container-fluid">
                 <div class="row">
+
+                    <!-- LEFT: Billing + Shipping Forms -->
                     <div class="col-lg-8">
                         <div class="checkout-inner">
+
+                            <!-- BILLING ADDRESS -->
                             <div class="billing-address">
                                 <h2>Billing Address</h2>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label>First Name</label>
-                                        <input class="form-control" type="text" placeholder="First Name">
+                                        <label>First Name *</label>
+                                        <input class="form-control" type="text" id="bill-firstname" placeholder="First Name">
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Last Name"</label>
-                                        <input class="form-control" type="text" placeholder="Last Name">
+                                        <label>Last Name</label>
+                                        <input class="form-control" type="text" id="bill-lastname" placeholder="Last Name">
                                     </div>
                                     <div class="col-md-6">
-                                        <label>E-mail</label>
-                                        <input class="form-control" type="text" placeholder="E-mail">
+                                        <label>E-mail *</label>
+                                        <input class="form-control" type="email" id="bill-email" placeholder="E-mail">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Mobile No</label>
-                                        <input class="form-control" type="text" placeholder="Mobile No">
+                                        <input class="form-control" type="text" id="bill-mobile" placeholder="Mobile No">
                                     </div>
                                     <div class="col-md-12">
-                                        <label>Address</label>
-                                        <input class="form-control" type="text" placeholder="Address">
+                                        <label>Address *</label>
+                                        <input class="form-control" type="text" id="bill-address" placeholder="Street Address">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Country</label>
-                                        <select class="custom-select">
-                                            <option selected>United States</option>
-                                            <option>Afghanistan</option>
-                                            <option>Albania</option>
-                                            <option>Algeria</option>
+                                        <select class="custom-select" id="bill-country">
+                                            <option selected>Uganda</option>
+                                            <option>United States</option>
+                                            <option>United Kingdom</option>
+                                            <option>Kenya</option>
+                                            <option>Tanzania</option>
+                                            <option>Rwanda</option>
+                                            <option>South Africa</option>
+                                            <option>Nigeria</option>
+                                            <option>Ghana</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>City</label>
-                                        <input class="form-control" type="text" placeholder="City">
+                                        <label>City *</label>
+                                        <input class="form-control" type="text" id="bill-city" placeholder="City">
                                     </div>
                                     <div class="col-md-6">
-                                        <label>State</label>
-                                        <input class="form-control" type="text" placeholder="State">
+                                        <label>State / Region</label>
+                                        <input class="form-control" type="text" id="bill-state" placeholder="State / Region">
                                     </div>
                                     <div class="col-md-6">
-                                        <label>ZIP Code</label>
-                                        <input class="form-control" type="text" placeholder="ZIP Code">
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="newaccount">
-                                            <label class="custom-control-label" for="newaccount">Create an account</label>
-                                        </div>
+                                        <label>ZIP / Postal Code</label>
+                                        <input class="form-control" type="text" id="bill-zip" placeholder="ZIP Code">
                                     </div>
                                     <div class="col-md-12">
                                         <div class="custom-control custom-checkbox">
@@ -199,140 +197,114 @@
                                 </div>
                             </div>
 
-                            <div class="shipping-address">
+                            <!-- SHIPPING ADDRESS (hidden by default) -->
+                            <div class="shipping-address" id="shipping-section" style="display:none;">
                                 <h2>Shipping Address</h2>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>First Name</label>
-                                        <input class="form-control" type="text" placeholder="First Name">
+                                        <input class="form-control" type="text" id="ship-firstname" placeholder="First Name">
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Last Name"</label>
-                                        <input class="form-control" type="text" placeholder="Last Name">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>E-mail</label>
-                                        <input class="form-control" type="text" placeholder="E-mail">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Mobile No</label>
-                                        <input class="form-control" type="text" placeholder="Mobile No">
+                                        <label>Last Name</label>
+                                        <input class="form-control" type="text" id="ship-lastname" placeholder="Last Name">
                                     </div>
                                     <div class="col-md-12">
                                         <label>Address</label>
-                                        <input class="form-control" type="text" placeholder="Address">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Country</label>
-                                        <select class="custom-select">
-                                            <option selected>United States</option>
-                                            <option>Afghanistan</option>
-                                            <option>Albania</option>
-                                            <option>Algeria</option>
-                                        </select>
+                                        <input class="form-control" type="text" id="ship-address" placeholder="Street Address">
                                     </div>
                                     <div class="col-md-6">
                                         <label>City</label>
-                                        <input class="form-control" type="text" placeholder="City">
+                                        <input class="form-control" type="text" id="ship-city" placeholder="City">
                                     </div>
                                     <div class="col-md-6">
-                                        <label>State</label>
-                                        <input class="form-control" type="text" placeholder="State">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>ZIP Code</label>
-                                        <input class="form-control" type="text" placeholder="ZIP Code">
+                                        <label>Country</label>
+                                        <select class="custom-select" id="ship-country">
+                                            <option selected>Uganda</option>
+                                            <option>United States</option>
+                                            <option>Kenya</option>
+                                            <option>Tanzania</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
+                    <!-- RIGHT: Order Summary + Payment -->
                     <div class="col-lg-4">
                         <div class="checkout-inner">
-                            <div class="checkout-summary">
+
+                            <!-- ORDER SUMMARY -->
+                            <div class="checkout-summary" id="order-summary">
                                 <h1>Cart Total</h1>
-                                <p>Product Name<span>$99</span></p>
-                                <p class="sub-total">Sub Total<span>$99</span></p>
-                                <p class="ship-cost">Shipping Cost<span>$1</span></p>
-                                <h2>Grand Total<span>$100</span></h2>
+                                <p>Loading order summary...</p>
                             </div>
 
+                            <!-- PAYMENT METHODS -->
                             <div class="checkout-payment">
                                 <div class="payment-methods">
                                     <h1>Payment Methods</h1>
+
                                     <div class="payment-method">
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-1" name="payment">
-                                            <label class="custom-control-label" for="payment-1">Paypal</label>
+                                            <input type="radio" class="custom-control-input" id="payment-1" name="payment" value="PayPal">
+                                            <label class="custom-control-label" for="payment-1">PayPal</label>
                                         </div>
                                         <div class="payment-content" id="payment-1-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
+                                            <p>You will be redirected to PayPal to complete your payment securely.</p>
                                         </div>
                                     </div>
+
                                     <div class="payment-method">
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-2" name="payment">
-                                            <label class="custom-control-label" for="payment-2">Payoneer</label>
+                                            <input type="radio" class="custom-control-input" id="payment-2" name="payment" value="Mobile Money">
+                                            <label class="custom-control-label" for="payment-2">Mobile Money (MTN / Airtel)</label>
                                         </div>
                                         <div class="payment-content" id="payment-2-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
+                                            <p>Pay via MTN Mobile Money or Airtel Money. You will receive a prompt on your phone.</p>
                                         </div>
                                     </div>
+
                                     <div class="payment-method">
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-3" name="payment">
-                                            <label class="custom-control-label" for="payment-3">Check Payment</label>
+                                            <input type="radio" class="custom-control-input" id="payment-3" name="payment" value="Bank Transfer">
+                                            <label class="custom-control-label" for="payment-3">Direct Bank Transfer</label>
                                         </div>
                                         <div class="payment-content" id="payment-3-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
+                                            <p>Make your payment directly into our bank account. Your order will be processed after payment confirmation.</p>
                                         </div>
                                     </div>
+
                                     <div class="payment-method">
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-4" name="payment">
-                                            <label class="custom-control-label" for="payment-4">Direct Bank Transfer</label>
+                                            <input type="radio" class="custom-control-input" id="payment-4" name="payment" value="Cash on Delivery">
+                                            <label class="custom-control-label" for="payment-4">Cash on Delivery</label>
                                         </div>
                                         <div class="payment-content" id="payment-4-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
+                                            <p>Pay with cash when your order is delivered to your door.</p>
                                         </div>
                                     </div>
-                                    <div class="payment-method">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-5" name="payment">
-                                            <label class="custom-control-label" for="payment-5">Cash on Delivery</label>
-                                        </div>
-                                        <div class="payment-content" id="payment-5-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
-                                        </div>
-                                    </div>
+
                                 </div>
+
+                                <!-- Message area -->
+                                <div id="checkout-msg"></div>
+
+                                <!-- Place Order Button -->
                                 <div class="checkout-btn">
-                                    <button>Place Order</button>
+                                    <button id="place-order-btn" onclick="placeOrder()">Place Order</button>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
         <!-- Checkout End -->
-        
-        <!-- Footer Start -->
-        <div class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
                             <h2>Get in Touch</h2>
                             <div class="contact-info">
                                 <p><i class="fa fa-map-marker"></i>123 E Store, Los Angeles, USA</p>
@@ -418,15 +390,21 @@
         <!-- Footer Bottom End -->     
         
         <!-- Back to Top -->
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-        
+
         <!-- JavaScript Libraries -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
         <script src="lib/easing/easing.min.js"></script>
         <script src="lib/slick/slick.min.js"></script>
-        
+
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+
+        <!-- 1. Supabase CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <!-- 2. Your client file -->
+        <script src="js/supabase.js"></script>
+        <!-- 3. Page script -->
+        <script src="js/checkout.js"></script>
     </body>
 </html>
