@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Admin Panel - E Store</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+        <!-- Favicon -->
+        <link href="img/favicon.ico" rel="icon">
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+
+        <!-- CSS Libraries -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="css/style.css" rel="stylesheet">
+
+        <style>
+            body { background: #f4f6f9; }
+
+            .admin-wrapper { display: flex; min-height: 100vh; }
+
+            /* ── Sidebar ── */
+            .admin-sidebar {
+                width: 240px;
+                background: #1a1a2e;
+                color: #fff;
+                flex-shrink: 0;
+                padding: 0;
+                position: fixed;
+                top: 0; left: 0;
+                height: 100vh;
+                overflow-y: auto;
+                z-index: 100;
+            }
+            .admin-sidebar .brand {
+                padding: 20px 24px;
+                font-size: 20px;
+                font-weight: 700;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                background: #16213e;
+            }
+            .admin-sidebar .brand span { color: #e74c3c; }
+            .admin-sidebar nav a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 14px 24px;
+                color: rgba(255,255,255,0.75);
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.2s;
+                border-left: 3px solid transparent;
+            }
+            .admin-sidebar nav a:hover,
+            .admin-sidebar nav a.active {
+                color: #fff;
+                background: rgba(255,255,255,0.08);
+                border-left-color: #e74c3c;
+            }
+            .admin-sidebar nav a i { width: 18px; text-align: center; }
+            .admin-sidebar .sidebar-divider {
+                padding: 10px 24px 4px;
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: rgba(255,255,255,0.35);
+            }
+
+            /* ── Main Content ── */
+            .admin-main {
+                margin-left: 240px;
+                flex: 1;
+                padding: 30px;
+            }
+
+            /* ── Top Header ── */
+            .admin-topbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+            .admin-topbar h4 { margin: 0; font-weight: 700; }
+            .admin-topbar .user-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 14px;
+            }
+
+            /* ── Stat Cards ── */
+            .stat-card {
+                background: #fff;
+                border-radius: 8px;
+                padding: 24px;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                margin-bottom: 24px;
+            }
+            .stat-card .icon {
+                width: 52px; height: 52px;
+                border-radius: 12px;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 22px; color: #fff;
+            }
+            .stat-card .info h3 { margin: 0; font-size: 26px; font-weight: 700; }
+            .stat-card .info p  { margin: 0; color: #888; font-size: 13px; }
+
+            /* ── Panels ── */
+            .admin-panel {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                margin-bottom: 30px;
+            }
+            .admin-panel .panel-header {
+                padding: 18px 24px;
+                border-bottom: 1px solid #f0f0f0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .admin-panel .panel-header h5 { margin: 0; font-weight: 700; }
+            .admin-panel .panel-body { padding: 24px; }
+
+            /* ── Tab sections ── */
+            .admin-section { display: none; }
+            .admin-section.active { display: block; }
+
+            /* ── Product image preview ── */
+            #img-preview {
+                width: 100px; height: 100px;
+                object-fit: cover;
+                border-radius: 6px;
+                border: 1px solid #ddd;
+                display: none;
+                margin-top: 8px;
+            }
+
+            /* ── Table actions ── */
+            .tbl-actions button {
+                border: none;
+                background: none;
+                cursor: pointer;
+                padding: 4px 8px;
+                border-radius: 4px;
+            }
+            .tbl-actions .btn-edit  { color: #3498db; }
+            .tbl-actions .btn-delete{ color: #e74c3c; }
+            .tbl-actions button:hover { background: #f5f5f5; }
+
+            /* ── Badge ── */
+            .status-badge {
+                padding: 3px 10px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+            .badge-pending  { background:#fff3cd; color:#856404; }
+            .badge-paid     { background:#d4edda; color:#155724; }
+            .badge-shipped  { background:#cce5ff; color:#004085; }
+            .badge-cancelled{ background:#f8d7da; color:#721c24; }
+
+            /* ── Modal ── */
+            .modal-header { background: #1a1a2e; color: #fff; }
+            .modal-header .close { color: #fff; opacity: 1; }
+
+            @media (max-width: 768px) {
+                .admin-sidebar { width: 100%; height: auto; position: relative; }
+                .admin-main { margin-left: 0; padding: 16px; }
+            }
+        </style>
+    </head>
+
+    <body>
+    <div class="admin-wrapper">
+
+        <!-- ═══════════════ SIDEBAR ═══════════════ -->
+        <aside class="admin-sidebar">
+            <div class="brand">E<span>Store</span> Admin</div>
+            <nav>
+                <div class="sidebar-divider">Main</div>
+                <a href="#" class="active" onclick="showSection('dashboard')">
+                    <i class="fa fa-tachometer-alt"></i> Dashboard
+                </a>
+
+                <div class="sidebar-divider">Catalogue</div>
+                <a href="#" onclick="showSection('products')">
+                    <i class="fa fa-box"></i> Products
+                </a>
+                <a href="#" onclick="showSection('add-product')">
+                    <i class="fa fa-plus-circle"></i> Add Product
+                </a>
+
+                <div class="sidebar-divider">Sales</div>
+                <a href="#" onclick="showSection('orders')">
+                    <i class="fa fa-shopping-bag"></i> Orders
+                </a>
+
+                <div class="sidebar-divider">Users</div>
+                <a href="#" onclick="showSection('users')">
+                    <i class="fa fa-users"></i> Customers
+                </a>
+
+                <div class="sidebar-divider">Site</div>
+                <a href="index.html" target="_blank">
+                    <i class="fa fa-external-link-alt"></i> View Site
+                </a>
+                <a href="#" onclick="handleLogout()">
+                    <i class="fa fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+        <main class="admin-main">
+
+            <!-- Top Bar -->
+            <div class="admin-topbar">
+                <h4 id="page-title">Dashboard</h4>
+                <div class="user-info">
+                    <i class="fa fa-user-circle fa-lg"></i>
+                    <span id="admin-name">Admin</span>
+                    <span class="badge badge-success">Admin</span>
+                </div>
+            </div>
+
+            <!-- ─── DASHBOARD SECTION ─── -->
+            <div class="admin-section active" id="section-dashboard">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon" style="background:#3498db"><i class="fa fa-box"></i></div>
+                            <div class="info">
+                                <h3 id="stat-products">—</h3>
+                                <p>Total Products</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon" style="background:#2ecc71"><i class="fa fa-shopping-bag"></i></div>
+                            <div class="info">
+                                <h3 id="stat-orders">—</h3>
+                                <p>Total Orders</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon" style="background:#e67e22"><i class="fa fa-users"></i></div>
+                            <div class="info">
+                                <h3 id="stat-customers">—</h3>
+                                <p>Customers</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon" style="background:#e74c3c"><i class="fa fa-dollar-sign"></i></div>
+                            <div class="info">
+                                <h3 id="stat-revenue">—</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="admin-panel">
+                    <div class="panel-header">
+                        <h5><i class="fa fa-clock mr-2"></i>Recent Orders</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary" onclick="showSection('orders')">View All</a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead><tr>
+                                    <th>Order ID</th><th>Customer</th>
+                                    <th>Amount</th><th>Status</th><th>Date</th>
+                                </tr></thead>
+                                <tbody id="recent-orders-tbody">
+                                    <tr><td colspan="5" class="text-center text-muted">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── PRODUCTS SECTION ─── -->
+            <div class="admin-section" id="section-products">
+                <div class="admin-panel">
+                    <div class="panel-header">
+                        <h5><i class="fa fa-box mr-2"></i>All Products</h5>
+                        <button class="btn btn-sm btn-primary" onclick="showSection('add-product')">
+                            <i class="fa fa-plus"></i> Add Product
+                        </button>
+                    </div>
+                    <div class="panel-body">
+                        <div class="mb-3">
+                            <input type="text" id="product-search" class="form-control w-25 d-inline-block"
+                                   placeholder="Search products..." oninput="filterProducts()">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="thead-light"><tr>
+                                    <th>Image</th><th>Name</th><th>Category</th>
+                                    <th>Price</th><th>Stock</th><th>Actions</th>
+                                </tr></thead>
+                                <tbody id="products-tbody">
+                                    <tr><td colspan="6" class="text-center text-muted">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── ADD / EDIT PRODUCT SECTION ─── -->
+            <div class="admin-section" id="section-add-product">
+                <div class="admin-panel">
+                    <div class="panel-header">
+                        <h5 id="product-form-title"><i class="fa fa-plus-circle mr-2"></i>Add New Product</h5>
+                    </div>
+                    <div class="panel-body">
+                        <input type="hidden" id="edit-product-id">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Product Name *</label>
+                                    <input class="form-control" type="text" id="p-name" placeholder="Enter product name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Category *</label>
+                                    <select class="form-control" id="p-category">
+                                        <option value="">-- Select Category --</option>
+                                        <option>Clothing</option>
+                                        <option>Electronics</option>
+                                        <option>Fashion</option>
+                                        <option>Accessories</option>
+                                        <option>Gadgets</option>
+                                        <option>Kids</option>
+                                        <option>Home & Living</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Price ($) *</label>
+                                    <input class="form-control" type="number" id="p-price" placeholder="0.00" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Stock Quantity</label>
+                                    <input class="form-control" type="number" id="p-stock" placeholder="0" min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Image URL</label>
+                                    <input class="form-control" type="text" id="p-image"
+                                           placeholder="https://... or img/product-1.jpg"
+                                           oninput="previewImage()">
+                                    <img id="img-preview" src="" alt="Preview">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" id="p-description" rows="4"
+                                              placeholder="Product description..."></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12" id="product-form-msg"></div>
+                            <div class="col-md-12 mt-2">
+                                <button class="btn btn-primary" id="save-product-btn" onclick="saveProduct()">
+                                    <i class="fa fa-save"></i> Save Product
+                                </button>
+                                <button class="btn btn-secondary ml-2" onclick="cancelEdit()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── ORDERS SECTION ─── -->
+            <div class="admin-section" id="section-orders">
+                <div class="admin-panel">
+                    <div class="panel-header">
+                        <h5><i class="fa fa-shopping-bag mr-2"></i>All Orders</h5>
+                        <select class="form-control form-control-sm w-auto" id="order-status-filter"
+                                onchange="loadOrders()">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="thead-light"><tr>
+                                    <th>Order ID</th><th>Customer</th><th>Amount</th>
+                                    <th>Payment</th><th>Status</th><th>Date</th><th>Actions</th>
+                                </tr></thead>
+                                <tbody id="orders-tbody">
+                                    <tr><td colspan="7" class="text-center text-muted">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── CUSTOMERS SECTION ─── -->
+            <div class="admin-section" id="section-users">
+                <div class="admin-panel">
+                    <div class="panel-header">
+                        <h5><i class="fa fa-users mr-2"></i>Customers</h5>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="thead-light"><tr>
+                                    <th>Email</th><th>Name</th><th>Joined</th><th>Orders</th>
+                                </tr></thead>
+                                <tbody id="users-tbody">
+                                    <tr><td colspan="4" class="text-center text-muted">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ═══ UPDATE ORDER STATUS MODAL ═══ -->
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Order Status</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="modal-order-id">
+                    <p><strong>Order:</strong> <span id="modal-order-ref"></span></p>
+                    <div class="form-group">
+                        <label>New Status</label>
+                        <select class="form-control" id="modal-status">
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div id="modal-msg"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" onclick="updateOrderStatus()">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ DELETE PRODUCT CONFIRM MODAL ═══ -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Product</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="delete-product-id">
+                    <p>Are you sure you want to delete <strong id="delete-product-name"></strong>?</p>
+                    <p class="text-danger"><small>This action cannot be undone.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" onclick="confirmDeleteProduct()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 1. Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- 2. Your client file -->
+    <script src="js/supabase.js"></script>
+    <!-- 3. Page script -->
+    <script src="js/admin.js"></script>
+</body>
+</html>
