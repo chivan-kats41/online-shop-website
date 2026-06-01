@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Ecommerce</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .confirmation-box {
+            max-width: 650px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .confirmation-box .check-icon {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .order-details { text-align: left; margin-top: 30px; }
+        .order-details table { width: 100%; }
+        .order-details td { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .order-details td:last-child { text-align: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="confirmation-box">
+            <div class="check-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
+            <h2>Order Placed Successfully!</h2>
+            <p class="text-muted">Thank you for your purchase. Your order has been received and is being processed.</p>
+
+            <div class="alert alert-success">
+                Order ID: <strong id="order-id">Loading...</strong>
+            </div>
+
+            <!-- Order Items -->
+            <div class="order-details" id="order-details">
+                <h5>Order Summary</h5>
+                <table id="order-items-table">
+                    <tr><td colspan="2" class="text-center text-muted">Loading items...</td></tr>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                <a href="my-account.html" class="btn btn-primary mr-2">
+                    <i class="fa fa-user"></i> View My Orders
+                </a>
+                <a href="product-list.html" class="btn btn-secondary">
+                    <i class="fa fa-shopping-bag"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- 2. Your client file -->
+    <script src="js/supabase.js"></script>
+    <!-- 3. Page script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get order ID from URL ?order=xxx
+            const params  = new URLSearchParams(window.location.search)
+            const orderId = params.get('order')
+
+            if (!orderId) {
+                window.location.href = 'index.html'
+                return
+            }
+
+            // Show order ID (shortened)
+            document.getElementById('order-id').textContent = orderId.substring(0, 8).toUpperCase()
+
+            // Fetch order items
+            const { data: items, error } = await db
+                .from('order_items')
+                .select('quantity, unit_price, products(name)')
+                .eq('order_id', orderId)
+
+            if (error || !items) return
+
+            const tbody = document.getElementById('order-items-table')
+            const subtotal = items.reduce((sum, i) => sum + i.unit_price * i.quantity, 0)
+
+            tbody.innerHTML = items.map(item => `
+                <tr>
+                    <td>${item.products?.name || 'Product'} x${item.quantity}</td>
+                    <td>$${(item.unit_price * item.quantity).toFixed(2)}</td>
+                </tr>`).join('') + `
+                <tr>
+                    <td><strong>Shipping</strong></td>
+                    <td><strong>$5.00</strong></td>
+                </tr>
+                <tr style="font-size:1.1em;">
+                    <td><strong>Grand Total</strong></td>
+                    <td><strong>$${(subtotal + 5).toFixed(2)}</strong></td>
+                </tr>`
+        })
+    </script>
+</body>
+</html>
